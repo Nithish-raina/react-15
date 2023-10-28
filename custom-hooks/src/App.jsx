@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useReducer } from "react";
+import React, { useReducer, useRef } from "react";
 import { useState, useEffect } from "react";
 import "./App.css";
 import Posts from "./Posts";
@@ -112,6 +112,12 @@ function App() {
         name: "",
         age: "",
     });
+    const postListRef = useRef();
+    console.log("POST LIST REF", postListRef);
+    const scrollToTop = () => {
+        console.log("SCROLL TOP CLICKED");
+        postListRef.current.scrollToTop();
+    };
     return (
         <>
             {/* <h1>Use-State-Debugging {no}</h1>
@@ -135,7 +141,10 @@ function App() {
                     Set user Details{" "}
                 </button>
             </h5> */}
-            <Posts />
+            <Posts ref={postListRef} />
+            <button onClick={scrollToTop} style={{ backgroundColor: "red" }}>
+                Scroll to top
+            </button>
         </>
     );
 }

@@ -1,4 +1,11 @@
-import { useCallback, useLayoutEffect, useReducer } from "react";
+import {
+    forwardRef,
+    useCallback,
+    useImperativeHandle,
+    useLayoutEffect,
+    useReducer,
+    useRef,
+} from "react";
 import { v4 as uuidv4 } from "uuid";
 
 const asyncReducer = (state, action) => {
@@ -48,12 +55,20 @@ const useAsync = (initialState = {}, asyncCallBack) => {
     return state;
 };
 
-const Posts = () => {
+const Posts = forwardRef(function Posts(props, ref) {
+    const containerRef = useRef();
     const initialState = {
         status: "pending",
         data: [],
         error: null,
     };
+    const scrollToTop = () => {
+        containerRef.current.scrollTop = 0;
+    };
+
+    useImperativeHandle(ref, () => ({
+        scrollToTop,
+    }));
     const memoizedCallBack = useCallback(() => {
         return fetch("https://dummyjson.com/todos");
     }, []);
@@ -67,13 +82,17 @@ const Posts = () => {
         return <h2>Fetching posts</h2>;
     } else if (status === "resolved") {
         return (
-            <>
+            <div
+                ref={containerRef}
+                className="postlist-container"
+                style={{ overflowY: "scroll", height: "350px" }}
+            >
                 <h1>Posts list</h1>
                 <ul> {postsList}</ul>
-            </>
+            </div>
         );
     } else if (status === "rejected") {
         return <p>Oops ran out !!! {error}</p>;
     }
-};
+});
 export default Posts;
