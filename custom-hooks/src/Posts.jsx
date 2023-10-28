@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useLayoutEffect, useReducer } from "react";
+import { useCallback, useLayoutEffect, useReducer } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 const asyncReducer = (state, action) => {
-    // console.log("ACTION HERE", action);
     switch (action.type) {
         case "pending":
             return {
@@ -56,7 +55,7 @@ const Posts = () => {
         error: null,
     };
     const memoizedCallBack = useCallback(() => {
-        return fetch("https://dummyjson.com/todos?limit=3&skip=10");
+        return fetch("https://dummyjson.com/todos");
     }, []);
     const { status, data, error } = useAsync(initialState, memoizedCallBack);
     const postsList = data.map((post) => {
