@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer } from "react";
+import { useCallback, useEffect, useLayoutEffect, useReducer } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 const asyncReducer = (state, action) => {
@@ -28,7 +28,7 @@ const asyncReducer = (state, action) => {
 // Either memoize the asyncCallBack or importing the asyncCallback ensures stability of the function across every render which is not we wanted to do
 const useAsync = (initialState = {}, asyncCallBack) => {
     const [state, dispatch] = useReducer(asyncReducer, initialState);
-    useEffect(() => {
+    useLayoutEffect(() => {
         dispatch({ type: "pending" });
         const promise = asyncCallBack();
         promise
